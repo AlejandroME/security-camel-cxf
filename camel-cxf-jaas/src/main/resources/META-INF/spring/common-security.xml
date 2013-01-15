@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xmlns:spring-security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+  		  http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://www.springframework.org/schema/security
+	      http://www.springframework.org/schema/security/spring-security.xsd
+		http://camel.apache.org/schema/spring-security
+		   http://camel.apache.org/schema/spring-security/camel-spring-security.xsd">
+
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="allowIfAllAbstainDecisions" value="true"/>
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+            </list>
+        </property>
+    </bean>
+
+    <spring-security:authentication-manager alias="authenticationManager">
+        <spring-security:authentication-provider user-service-ref="userDetailsService"/>
+    </spring-security:authentication-manager>
+
+    <spring-security:user-service id="userDetailsService">
+        <spring-security:user name="jim" password="jimspassword" authorities="ROLE_USER, ROLE_ADMIN"/>
+        <spring-security:user name="charles" password="charlespassword" authorities="ROLE_USER, ROLE_ADMIN"/>
+        <spring-security:user name="bob" password="bobspassword" authorities="ROLE_USER"/>
+    </spring-security:user-service>
+
+    <authorizationPolicy id="admin" access="ROLE_ADMIN"
+                         authenticationManager="authenticationManager"
+                         accessDecisionManager="accessDecisionManager"
+                         xmlns="http://camel.apache.org/schema/spring-security"/>
+
+</beans>

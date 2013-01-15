@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+  		  http://www.springframework.org/schema/beans/spring-beans.xsd
+  		http://camel.apache.org/schema/spring
+		  http://camel.apache.org/schema/spring/camel-spring.xsd
+		http://camel.apache.org/schema/cxf
+		  http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+   <import resource="classpath:META-INF/spring/common-security.xml"/>
+
+    <cxf:cxfEndpoint id="WS"
+                     address="http://0.0.0.0:9191/training/WebService"
+                     serviceClass="com.fusesource.training.CustomerService">
+        <cxf:outInterceptors>
+            <ref bean="loggingOutInterceptor"/>
+        </cxf:outInterceptors>
+        <cxf:inInterceptors>
+            <ref bean="loggingInInterceptor"/>
+            <ref bean="wss4jInInterceptor"/>
+           <ref bean="authenticationInterceptor"/>
+        </cxf:inInterceptors>
+        <cxf:properties>
+            <entry key="ws-security.validate.token" value="false"/>
+        </cxf:properties>
+    </cxf:cxfEndpoint>
+
+    <bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
+    <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
+
+    <bean id="wss4jInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+        <constructor-arg>
+            <map>
+                <entry key="action" value="UsernameToken Timestamp"/>
+                <entry key="passwordType" value="PasswordText"/>
+                <!-- If We only use ws-security, then prefer to digest the Password -->
+                <!--<entry key="passwordCallbackClass" value="com.fusesource.training.camel.UTPasswordCallback"/>-->
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!-- Security Realm JAAS -->
+    <bean id="authenticationInterceptor" class="org.apache.cxf.interceptor.security.JAASLoginInterceptor">
+        <property name="contextName" value="myRealm"/>
+    </bean>
+
+    <bean id="enrich" class="com.fusesource.training.camel.Enrich"
+          init-method="generateCustomer"/>
+
+    <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
+
+        <route id="cxf-to-client-pojo">
+
+            <from uri="cxf:bean:WS"/>
+
+            <!-- Convert -->
+            <bean ref="enrich" method="convertToAuthenticationWithRealm"/>
+            <log message=">> Exchange header : ${in.header.CamelAuthentication}"/>
+
+            <!-- Check if the client is authorized -->
+            <policy ref="admin">
+                <choice>
+                    <when>
+                        <simple>${in.header.SOAPAction} contains 'getCustomerByName'</simple>
+                        <log message=">>> We will search a Customer"/>
+                        <bean method="getCustomerByName2" ref="enrich"/>
+                        <log message=">>> Response generated : ${body}"/>
+                    </when>
+                    <when>
+                        <simple>${in.header.SOAPAction} contains 'saveCustomer'</simple>
+                        <log message=">>> We will save a Customer"/>
+                        <bean method="saveCustomer" ref="enrich"/>
+                    </when>
+                    <when>
+                        <simple>${in.header.SOAPAction} contains 'getAllCustomers'</simple>
+                        <log message=">>> We will get all Customers"/>
+                        <bean method="getCustomers" ref="enrich"/>
+                    </when>
+                </choice>
+            </policy>
+        </route>
+
+        <!--
+
+        <dataFormats>
+            <soapjaxb contextPath="com.fusesource.training" id="soapFormat"/>
+        </dataFormats>
+
+        <route id="cxf-to-client-message">
+
+            <from uri="cxf:bean:WS"/>
+
+            <from uri="cxf:bean:WS?dataFormat=CXF_MESSAGE"/>
+            <unmarshal ref="soapFormat"/>
+
+            <policy ref="admin">
+                <choice>
+                    <when>
+                        <simple>${in.header.SOAPAction} contains 'getCustomerByName'</simple>
+                        <log message=">>> We will search a Customer"/>
+                        <bean method="getCustomerByName" ref="enrich"/>
+                        <marshal ref="soapFormat"/>
+                    </when>
+                    <when>
+                        <simple>${in.header.SOAPAction} contains 'saveCustomer'</simple>
+                        <log message=">>> We will save a Customer"/>
+                        <bean method="saveCustomer" ref="enrich"/>
+                        <marshal ref="soapFormat"/>
+                    </when>
+                    <when>
+                        <simple>${in.header.SOAPAction} contains 'getAllCustomers'</simple>
+                        <log message=">>> We will get all Customers"/>
+                        <bean method="getCustomers" ref="enrich"/>
+                        <marshal ref="soapFormat"/>
+                    </when>
+                </choice>
+            </policy>
+
+            <log message=">>> Response generated : ${body}"/>
+
+        </route>
+        -->
+
+    </camelContext>
+
+</beans>
