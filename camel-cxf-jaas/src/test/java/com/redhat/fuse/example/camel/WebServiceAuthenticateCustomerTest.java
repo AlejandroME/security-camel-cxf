@@ -29,7 +29,17 @@ public class WebServiceAuthenticateCustomerTest extends CamelSpringTestSupport {
         return new ClassPathXmlApplicationContext("/META-INF/spring/CamelContext1.xml");
     }
 
-    protected static CustomerService createCXFClient(String url) {
+    @Override
+    public boolean isCreateCamelContextPerClass() {
+        return true;
+    }
+
+    /* @Before
+    public void configure() {
+        System.setProperty("org.apache.cxf.transports.http_jetty.DontClosePort", "true");
+    }*/
+
+    protected CustomerService createCXFClient(String url) {
 
         List<Interceptor<? extends Message>> outInterceptors = new ArrayList<Interceptor<? extends Message>>();
 
@@ -56,7 +66,7 @@ public class WebServiceAuthenticateCustomerTest extends CamelSpringTestSupport {
         outInterceptors.add(wss4j);
         outInterceptors.add(loggingOutInterceptor);
 
-        // we use CXF to create a client for us as its easier than JAXWS and works
+        // We use CXF to create a client for us as its easier than JAXWS and works
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setOutInterceptors(outInterceptors);
         factory.setServiceClass(CustomerService.class);

@@ -8,17 +8,14 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.interceptor.security.JAASLoginInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,18 +33,23 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
         return new ClassPathXmlApplicationContext("/META-INF/spring/CamelContext2.xml");
     }
 
-    @BeforeClass
-    public static void configure() throws Exception {
+
+    @Override
+    public boolean isCreateCamelContextPerClass() {
+        return true;
+    }
+
+    @Before
+    public void configure() throws Exception {
         String path = "simpleJaas.config";
-        java.net.URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
+        java.net.URL resource = this.getClass().getClassLoader().getResource(path);
         if (resource != null) {
             path = resource.getFile();
             System.setProperty("java.security.auth.login.config", path);
         }
-
     }
 
-    protected static CustomerService createCXFClient(String url) {
+    protected CustomerService createCXFClient(String url) {
 
         List<Interceptor<? extends Message>> outInterceptors = new ArrayList<Interceptor<? extends Message>>();
 
@@ -78,8 +80,6 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
 
     @Test
     public void testGetAllCustomers() throws Exception {
-
-        System.out.println(">> Property set : " + System.getProperty("java.security.auth.login.config"));
 
         String client = "Fuse";
 

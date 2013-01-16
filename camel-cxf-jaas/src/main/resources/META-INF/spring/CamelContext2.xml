@@ -10,7 +10,7 @@
 		http://camel.apache.org/schema/cxf
 		  http://camel.apache.org/schema/cxf/camel-cxf.xsd">
 
-   <import resource="classpath:META-INF/spring/common-security.xml"/>
+    <import resource="classpath:META-INF/spring/common-security.xml"/>
 
     <cxf:cxfEndpoint id="WS"
                      address="http://0.0.0.0:9191/training/WebService"
@@ -21,7 +21,7 @@
         <cxf:inInterceptors>
             <ref bean="loggingInInterceptor"/>
             <ref bean="wss4jInInterceptor"/>
-           <ref bean="authenticationInterceptor"/>
+            <ref bean="authenticationInterceptor"/>
         </cxf:inInterceptors>
         <cxf:properties>
             <entry key="ws-security.validate.token" value="false"/>
@@ -36,8 +36,6 @@
             <map>
                 <entry key="action" value="UsernameToken Timestamp"/>
                 <entry key="passwordType" value="PasswordText"/>
-                <!-- If We only use ws-security, then prefer to digest the Password -->
-                <!--<entry key="passwordCallbackClass" value="com.redhat.fuse.example.camel.UTPasswordCallback"/>-->
             </map>
         </constructor-arg>
     </bean>

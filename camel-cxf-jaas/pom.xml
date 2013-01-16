@@ -12,10 +12,15 @@
     </parent>
 
     <artifactId>camel-cxf-jaas</artifactId>
-    <name>Camel CXF :: JAAS</name>
+    <name>Security Example Camel :: CXF :: JAAS</name>
 
     <dependencies>
         <!-- cxf -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-core</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -37,15 +42,18 @@
             <version>${cxf.version}</version>
         </dependency>
 
+        <!-- Spring
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        -->
+
         <!-- ws-security -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-core</artifactId>
             <version>${cxf.version}</version>
         </dependency>
 
@@ -85,6 +93,47 @@
             <artifactId>camel-jaxb</artifactId>
             <version>${camel.version}</version>
         </dependency>
+
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
+            <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core-xml</artifactId>
+            <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
+            <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- Logging -->
         <dependency>
@@ -130,7 +179,7 @@
                 <version>${camel.version}</version>
                 <configuration>
                     <!--  the spring context file must be separate from the OSGi bundle, so we provide one here -->
-                    <fileApplicationContextUri>src/main/resources/META-INF/spring/CamelContext.xml
+                    <fileApplicationContextUri>src/main/resources/META-INF/spring/CamelContext2.xml
                     </fileApplicationContextUri>
                 </configuration>
             </plugin>
@@ -199,16 +248,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <systemPropertyVariables>
-                        <!-- <systemProperty>
-                             <name>java.security.auth.login.config</name>
-                             <value>simpleJaas.config</value>
-                         </systemProperty>
-                         <systemProperty>
-                             <name>policy.allowSystemProperty</name>
-                             <value>true</value>
-                         </systemProperty>  -->
-                    </systemPropertyVariables>
+                    <excludes>
+                        <!--<exclude>**/WebServiceAuthenticateCustomerTest.java</exclude> -->
+                    </excludes>
                 </configuration>
             </plugin>
 

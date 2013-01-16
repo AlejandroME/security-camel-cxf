@@ -6,7 +6,7 @@
 
     <groupId>com.redhat.fuse.example</groupId>
     <artifactId>parent</artifactId>
-    <name>Parent POM for Security With Camel, CXF, JAAS, Spring</name>
+    <name>Parent POM for Security examples With Camel, CXF, JAAS, Spring</name>
     <version>1.0</version>
     <packaging>pom</packaging>
 
@@ -41,27 +41,25 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-
         <activemq.version>5.7.0.fuse-71-046</activemq.version>
+        <!--
         <camel.version>2.10.0.fuse-71-046</camel.version>
         <cxf.version>2.6.0.fuse-71-046</cxf.version>
         <karaf.version>2.3.0.fuse-71-046</karaf.version>
-        <maven.bundle.plugin.version>2.3.7</maven.bundle.plugin.version>
+        -->
 
-        <slf4j.version>1.6.1</slf4j.version>
-
-        <spring.version>3.0.5.RELEASE</spring.version>
-        <jetty.version>7.5.3.v20111011</jetty.version>
-        <log4j.version>1.2.16</log4j.version>
+        <camel.version>2.10.3</camel.version>
+        <cxf.version>2.6.3</cxf.version>
+        <karaf.version>2.3.0</karaf.version>
 
         <commons-lang.version>2.4</commons-lang.version>
-        <easymock.version>2.5.2</easymock.version>
+        <jetty.version>7.5.3.v20111011</jetty.version>
         <junit.version>4.8.1</junit.version>
-        <karaf.version>2.2.0-fuse-00-43</karaf.version>
-        <postgres.version>8.3-603.jdbc3</postgres.version>
-        <spring-osgi.version>1.2.0</spring-osgi.version>
-        <testng.version>5.8</testng.version>
-        <xbean.version>3.7</xbean.version>
+        <log4j.version>1.2.16</log4j.version>
+        <slf4j.version>1.6.1</slf4j.version>
+        <spring.version>3.0.7.RELEASE</spring.version>
+
+        <maven.bundle.plugin.version>2.3.7</maven.bundle.plugin.version>
     </properties>
 
     <build>
@@ -88,24 +86,14 @@
                     <version>${maven.bundle.plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxb2-maven-plugin</artifactId>
-                    <version>1.3</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.5.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.9</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.5</version>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
