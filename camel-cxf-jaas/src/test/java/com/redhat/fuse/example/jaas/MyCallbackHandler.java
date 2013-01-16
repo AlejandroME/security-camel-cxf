@@ -1,4 +1,4 @@
-package com.fusesource.training.jaas;
+package com.redhat.fuse.example.jaas;
 
 import javax.security.auth.callback.*;
 import java.io.IOException;

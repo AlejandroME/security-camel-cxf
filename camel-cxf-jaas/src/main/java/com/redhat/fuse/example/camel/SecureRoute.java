@@ -1,4 +1,4 @@
-package com.fusesource.training.camel;
+package com.redhat.fuse.example.camel;
 
 import org.apache.camel.builder.RouteBuilder;
 

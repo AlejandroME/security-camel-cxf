@@ -1,6 +1,6 @@
-package com.fusesource.training.camel;
+package com.redhat.fuse.example.camel;
 
-import com.fusesource.training.*;
+import com.redhat.fuse.example.*;
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
 import org.apache.cxf.binding.soap.SoapMessage;

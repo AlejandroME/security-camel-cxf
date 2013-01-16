@@ -1,8 +1,8 @@
-package com.fusesource.training.jaas;
+package com.redhat.fuse.example.jaas;
 
-import com.fusesource.training.jaas.principal.RolePolicy;
-import com.fusesource.training.jaas.principal.RolePrincipal;
-import com.fusesource.training.jaas.principal.UserPrincipal;
+import com.redhat.fuse.example.jaas.principal.RolePolicy;
+import com.redhat.fuse.example.jaas.principal.RolePrincipal;
+import com.redhat.fuse.example.jaas.principal.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

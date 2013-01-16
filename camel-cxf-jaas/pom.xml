@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.fusesource.training</groupId>
-        <artifactId>security-camel</artifactId>
+        <groupId>com.redhat.fuse.example</groupId>
+        <artifactId>parent</artifactId>
         <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -157,8 +157,8 @@
                             org.springframework.beans.*
                         </DynamicImport-Package>
                         <Private-Package>
-                            com.fusesource.training,
-                            com.fusesource.training.camel
+                            com.redhat.fuse.example,
+                            com.redhat.fuse.example.camel
                         </Private-Package>
                         <Export-Package>
                         </Export-Package>

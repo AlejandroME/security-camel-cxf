@@ -14,7 +14,7 @@
 
     <cxf:cxfEndpoint id="WS"
                      address="http://0.0.0.0:9090/training/WebService"
-                     serviceClass="com.fusesource.training.CustomerService">
+                     serviceClass="com.redhat.fuse.example.CustomerService">
         <cxf:outInterceptors>
             <ref bean="loggingOutInterceptor"/>
         </cxf:outInterceptors>
@@ -32,12 +32,12 @@
             <map>
                 <entry key="action" value="UsernameToken Timestamp"/>
                 <entry key="passwordType" value="PasswordText"/>
-                <entry key="passwordCallbackClass" value="com.fusesource.training.camel.UTPasswordCallback"/>
+                <entry key="passwordCallbackClass" value="com.redhat.fuse.example.camel.UTPasswordCallback"/>
             </map>
         </constructor-arg>
     </bean>
 
-    <bean id="enrich" class="com.fusesource.training.camel.Enrich"
+    <bean id="enrich" class="com.redhat.fuse.example.camel.Enrich"
           init-method="generateCustomer"/>
 
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
@@ -76,7 +76,7 @@
         <!--
 
         <dataFormats>
-            <soapjaxb contextPath="com.fusesource.training" id="soapFormat"/>
+            <soapjaxb contextPath="com.redhat.fuse.example" id="soapFormat"/>
         </dataFormats>
 
         <route id="cxf-to-client-message">

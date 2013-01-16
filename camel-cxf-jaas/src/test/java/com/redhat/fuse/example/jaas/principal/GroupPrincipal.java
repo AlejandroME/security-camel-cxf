@@ -1,4 +1,4 @@
-package com.fusesource.training.jaas.principal;
+package com.redhat.fuse.example.jaas.principal;
 
 import java.security.Principal;
 import java.security.acl.Group;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="CustomerService"
-                  targetNamespace="http://training.fusesource.com/"
+                  targetNamespace="http://example.fuse.redhat.com/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                  xmlns:tns="http://training.fusesource.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://example.fuse.redhat.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
     <wsdl:types>
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                   xmlns:tns="http://training.fusesource.com/"
+                   xmlns:tns="http://example.fuse.redhat.com/"
                    attributeFormDefault="unqualified"
                    elementFormDefault="unqualified"
-                   targetNamespace="http://training.fusesource.com/">
+                   targetNamespace="http://example.fuse.redhat.com/">
 
             <!-- Entity definition -->
             <xs:complexType name="customer">
@@ -122,7 +122,7 @@
                       transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="getCustomerByName">
             <soap:operation
-                    soapAction="http://training.fusesource.com/getCustomerByName"/>
+                    soapAction="http://example.fuse.redhat.com/getCustomerByName"/>
             <wsdl:input name="getCustomerByName">
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -135,14 +135,14 @@
         </wsdl:operation>
 
         <wsdl:operation name="getAllCustomers">
-            <soap:operation soapAction="http://training.fusesource.com/getAllCustomers"/>
+            <soap:operation soapAction="http://example.fuse.redhat.com/getAllCustomers"/>
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
 
         <wsdl:operation name="saveCustomer">
-            <soap:operation soapAction="http://training.fusesource.com/saveCustomer"/>
+            <soap:operation soapAction="http://example.fuse.redhat.com/saveCustomer"/>
             <wsdl:input name="saveCustomerRequest">
                 <soap:body use="literal"/>
             </wsdl:input>

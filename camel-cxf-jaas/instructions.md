@@ -15,7 +15,7 @@ Deployment:
 
 then please enter this in the Karaf Console:
 
-    osgi:install -s mvn:com.fusesource.training/camel-exercises-webservice/2010.07.12
+    osgi:install -s mvn:com.redhat.fuse.example/camel-exercises-webservice/2010.07.12
 
 3) Install it as feature (need to add the features URL ahead of time, please see the camel-exercises-features project)
 
@@ -223,4 +223,4 @@ qtp980604133-39 INFO [cxf-to-queue] - SOAP message received : <?xml version="1.0
     </ns2:Body>
 </ns2:Envelope>
  and operation type : http://training.fusesource.com/saveCustomer
-qtp980604133-39 INFO [com.fusesource.training.camel.Enrich] - >> Customer created and added in the array.
+qtp980604133-39 INFO [com.redhat.fuse.example.camel.Enrich] - >> Customer created and added in the array.

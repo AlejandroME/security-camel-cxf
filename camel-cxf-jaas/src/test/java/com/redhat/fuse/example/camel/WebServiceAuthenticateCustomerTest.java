@@ -1,6 +1,6 @@
-package com.fusesource.training.camel;
+package com.redhat.fuse.example.camel;
 
-import com.fusesource.training.*;
+import com.redhat.fuse.example.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
 import org.apache.cxf.interceptor.Interceptor;
@@ -40,13 +40,13 @@ public class WebServiceAuthenticateCustomerTest extends CamelSpringTestSupport {
         /* CONFIG USING PASSWORD DIGEST
         outProps.put("passwordType", "PasswordDigest");
         outProps.put("user", "jim");
-        outProps.put("passwordCallbackClass", "com.fusesource.training.camel.UTPasswordCallback");
+        outProps.put("passwordCallbackClass", "com.redhat.fuse.example.camel.UTPasswordCallback");
          */
 
         // CONFIG WITH CLEAR PASSWORD
         outProps.put("passwordType", "PasswordText");
         outProps.put("user", "charles");
-        outProps.put("passwordCallbackClass", "com.fusesource.training.camel.UTPasswordCallback");
+        outProps.put("passwordCallbackClass", "com.redhat.fuse.example.camel.UTPasswordCallback");
 
         WSS4JOutInterceptor wss4j = new WSS4JOutInterceptor(outProps);
 
