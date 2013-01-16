@@ -3,6 +3,7 @@ package com.redhat.fuse.example.camel;
 import com.redhat.fuse.example.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -89,6 +90,8 @@ public class WebServiceAuthenticateCustomerTest extends CamelSpringTestSupport {
 
         GetCustomerByNameResponse result  = customerService.getCustomerByName(req);
         System.out.println(">>> Response : " + result);
+
+        BusFactory.setDefaultBus(null);
 
         // Assert get Fuse customer
         assertEquals("Fuse", result.getReturn().get(0).getName());
