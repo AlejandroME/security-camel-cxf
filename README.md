@@ -32,22 +32,22 @@ or JAAS & [Security Module - LoginModule](http://docs.oracle.com/javase/6/docs/a
 Instructions to run the JAAS or JAAS-Realm example
 --------------------------------------------------
 
-  1) cd camel-cxf-jaas
-  2) Start camel plugin using the command
-      mvn -Pjaas camel:run
-  3) Open [SoapUI client](http://www.soapui.org/) and create a project (name = camel-ws-security-jaas) using the wsdl (http://127.0.0.1:9090/training/WebService?wsdl)
-  4) Apply [security](http://www.soapui.org/SOAP-and-WSDL/applying-ws-security.html) by adding a Username (charles/charlespassword) and TimeStamp
-     Increase Time to Live to 6000
-     Password type should be passwordText
-  5) Configure outgoing traffic
-  6) Create a SOAP request to getAllCustomers
+    1) cd camel-cxf-jaas
+    2) Start camel plugin using the command
+          mvn -Pjaas camel:run
+    3) Open [SoapUI client](http://www.soapui.org/) and create a project (name = camel-ws-security-jaas) using the wsdl (http://127.0.0.1:9090/training/WebService?wsdl)
+    4) Apply [security](http://www.soapui.org/SOAP-and-WSDL/applying-ws-security.html) by adding a Username (charles/charlespassword) and TimeStamp
+         Increase Time to Live to 6000
+         Password type should be passwordText
+    5) Configure outgoing traffic
+    6) Create a SOAP request to getAllCustomers
 
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
        <soapenv:Header/>
        <soapenv:Body/>
     </soapenv:Envelope>
 
-  7) Authenticate the user
+    7) Authenticate the user
 
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
        <soap:Header>
@@ -78,7 +78,7 @@ Instructions to run the JAAS or JAAS-Realm example
        </soap:Body>
     </soap:Envelope>
 
-  8) Repeat 2) to 6) but using now mvn -Pjaas-realm camel:run
+    8) Repeat 2) to 6) but using now mvn -Pjaas-realm camel:run
 
 ### CXF - REST
 
