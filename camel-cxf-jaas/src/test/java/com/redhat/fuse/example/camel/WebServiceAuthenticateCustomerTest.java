@@ -4,6 +4,7 @@ import com.redhat.fuse.example.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
 import org.apache.cxf.BusFactory;
+import org.apache.cxf.bus.spring.SpringBusFactory;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -89,9 +90,11 @@ public class WebServiceAuthenticateCustomerTest extends CamelSpringTestSupport {
         CustomerService customerService = createCXFClient(url);
 
         GetCustomerByNameResponse result  = customerService.getCustomerByName(req);
-        System.out.println(">>> Response : " + result);
 
-        BusFactory.setDefaultBus(null);
+        // SetDefaultBus to null to avoid issue
+        // when within same JVM we run different CXF
+        // tests using Spring Beans
+        SpringBusFactory.setDefaultBus(null);
 
         // Assert get Fuse customer
         assertEquals("Fuse", result.getReturn().get(0).getName());
