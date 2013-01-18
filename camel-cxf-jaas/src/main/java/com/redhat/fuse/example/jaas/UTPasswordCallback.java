@@ -1,4 +1,4 @@
-package com.redhat.fuse.example.camel;
+package com.redhat.fuse.example.jaas;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,11 +17,8 @@ public class UTPasswordCallback implements CallbackHandler {
     private Map<String, String> passwords = new HashMap<String, String>();
 
     public UTPasswordCallback() {
-        passwords.put("claus", "sualc");
         passwords.put("charles", "charlespassword");
-        passwords.put("james", "semaj");
-        passwords.put("abcd", "dcba");
-        passwords.put("jim","jimspassword");
+        passwords.put("jim","jimpassword");
     }
 
     /**

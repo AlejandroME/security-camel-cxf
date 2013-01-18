@@ -1,13 +1,14 @@
 package com.redhat.fuse.example.camel;
 
-import com.redhat.fuse.example.CustomerService;
-import com.redhat.fuse.example.CustomerType;
-import com.redhat.fuse.example.GetCustomerByName;
-import com.redhat.fuse.example.GetCustomerByNameResponse;
+import com.redhat.fuse.example.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
 import org.apache.cxf.bus.spring.SpringBusFactory;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.interceptor.InFaultInterceptors;
 import org.apache.cxf.interceptor.Interceptor;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
@@ -28,6 +29,7 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
     private static final String URL = "http://localhost:9191/training/WebService";
 
     protected CamelContext camel;
+    protected JaxWsProxyFactoryBean factory;
 
     @Override
     protected AbstractXmlApplicationContext createApplicationContext() {
@@ -50,9 +52,10 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
         }
     }
 
-    protected CustomerService createCXFClient(String url) {
+    protected CustomerService createCXFClient(String url, String user) {
 
         List<Interceptor<? extends Message>> outInterceptors = new ArrayList<Interceptor<? extends Message>>();
+        List<Interceptor<? extends Message>> inInterceptors = new ArrayList<Interceptor<? extends Message>>();
 
         // Define WSS4j properties for flow outgoing
         Map<String, Object> outProps = new HashMap<String, Object>();
@@ -60,19 +63,23 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
 
         // CONFIG WITH CLEAR PASSWORD
         outProps.put("passwordType", "PasswordText");
-        outProps.put("user", "charles");
-        outProps.put("passwordCallbackClass", "com.redhat.fuse.example.camel.UTPasswordCallback");
+        outProps.put("user", user);
+        outProps.put("passwordCallbackClass", "com.redhat.fuse.example.jaas.UTPasswordCallback");
 
         WSS4JOutInterceptor wss4j = new WSS4JOutInterceptor(outProps);
 
         // Add LoggingOutInterceptor
         LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
 
+        // Add LoggingInInterceptor
+        LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
+
         outInterceptors.add(wss4j);
         outInterceptors.add(loggingOutInterceptor);
+        inInterceptors.add(loggingInInterceptor);
 
-        // we use CXF to create a client for us as its easier than JAXWS and works
-        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+        // We use CXF to create a client for us as its easier than JAXWS and works
+        factory = new JaxWsProxyFactoryBean();
         factory.setOutInterceptors(outInterceptors);
         factory.setServiceClass(CustomerService.class);
         factory.setAddress(url);
@@ -80,29 +87,64 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
     }
 
     @Test
-    public void testGetAllCustomers() throws Exception {
+    public void testGetCustomerByNameAuthorized() throws Exception {
 
-        String client = "Fuse";
+        String company = "Fuse";
+        String user = "charles";
 
         // Create Get Customer By Name
         GetCustomerByName req = new GetCustomerByName();
-        req.setName(client);
+        req.setName(company);
 
         // create the webservice client and send the request
         String url = context.resolvePropertyPlaceholders(URL);
-        CustomerService customerService = createCXFClient(url);
+        CustomerService customerService = createCXFClient(url,user);
 
         GetCustomerByNameResponse result = customerService.getCustomerByName(req);
+
+        // Assert get Fuse customer
+        assertEquals("Fuse", result.getReturn().get(0).getName());
+        assertEquals("FuseSource Office", result.getReturn().get(0).getAddress().get(0));
+        assertEquals(CustomerType.BUSINESS, result.getReturn().get(0).getType());
 
         // SetDefaultBus to null to avoid issue
         // when within same JVM we run different CXF
         // tests using Spring Beans
         SpringBusFactory.setDefaultBus(null);
 
-        // Assert get Fuse customer
-        assertEquals("Fuse", result.getReturn().get(0).getName());
-        assertEquals("FuseSource Office", result.getReturn().get(0).getAddress().get(0));
-        assertEquals(CustomerType.BUSINESS, result.getReturn().get(0).getType());
+
+    }
+
+    @Test
+    public void testGetCustomerByNameNotAuthorized() throws Exception {
+
+        String company = "Fuse";
+        String user = "jim";
+
+        // Create Get Customer By Name
+        GetCustomerByName req = new GetCustomerByName();
+        req.setName(company);
+
+        // create the webservice client and send the request
+        String url = context.resolvePropertyPlaceholders(URL);
+        CustomerService customerService = createCXFClient(url,user);
+
+        Throwable t = null;
+        try {
+            GetCustomerByNameResponse result = customerService.getCustomerByName(req);
+            fail("expect NotAuthorizedUserException");
+        } catch (NotAuthorizedUserException e) {
+            t = e;
+            assertEquals("Not Authorized user : ", "jim", e.getFaultInfo().getUser());
+        }
+
+        assertNotNull(t);
+        assertTrue(t instanceof NotAuthorizedUserException);
+
+        // SetDefaultBus to null to avoid issue
+        // when within same JVM we run different CXF
+        // tests using Spring Beans
+        SpringBusFactory.setDefaultBus(null);
 
     }
 }

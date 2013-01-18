@@ -24,9 +24,8 @@
     </spring-security:authentication-manager>
 
     <spring-security:user-service id="userDetailsService">
-        <spring-security:user name="jim" password="jimspassword" authorities="ROLE_USER, ROLE_ADMIN"/>
+        <spring-security:user name="jim" password="jimspassword" authorities="ROLE_USER"/>
         <spring-security:user name="charles" password="charlespassword" authorities="ROLE_USER, ROLE_ADMIN"/>
-        <spring-security:user name="bob" password="bobspassword" authorities="ROLE_USER"/>
     </spring-security:user-service>
 
     <authorizationPolicy id="admin" access="ROLE_ADMIN"

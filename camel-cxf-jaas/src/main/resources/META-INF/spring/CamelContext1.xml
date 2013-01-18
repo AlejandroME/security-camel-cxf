@@ -32,7 +32,7 @@
             <map>
                 <entry key="action" value="UsernameToken Timestamp"/>
                 <entry key="passwordType" value="PasswordText"/>
-                <entry key="passwordCallbackClass" value="com.redhat.fuse.example.camel.UTPasswordCallback"/>
+                <entry key="passwordCallbackClass" value="com.redhat.fuse.example.jaas.UTPasswordCallback"/>
             </map>
         </constructor-arg>
     </bean>

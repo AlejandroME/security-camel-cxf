@@ -58,7 +58,7 @@ public class WebServiceAuthenticateCustomerTest extends CamelSpringTestSupport {
         // CONFIG WITH CLEAR PASSWORD
         outProps.put("passwordType", "PasswordText");
         outProps.put("user", "charles");
-        outProps.put("passwordCallbackClass", "com.redhat.fuse.example.camel.UTPasswordCallback");
+        outProps.put("passwordCallbackClass", "com.redhat.fuse.example.jaas.UTPasswordCallback");
 
         WSS4JOutInterceptor wss4j = new WSS4JOutInterceptor(outProps);
 

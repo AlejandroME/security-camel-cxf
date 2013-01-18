@@ -23,8 +23,32 @@
             <ref bean="wss4jInInterceptor"/>
             <ref bean="authenticationInterceptor"/>
         </cxf:inInterceptors>
+        <!--
+        <cxf:dataBinding>
+            <bean class="org.apache.cxf.jaxb.JAXBDataBinding">
+                <property name="extraClass">
+                    <list>
+                        <value>com.redhat.fuse.example.NotAuthorizedUserException</value>
+                        <value>com.redhat.fuse.example.NoSuchCustomerException</value>
+                    </list>
+                </property>
+            </bean>
+        </cxf:dataBinding>
+        -->
         <cxf:properties>
             <entry key="ws-security.validate.token" value="false"/>
+            <!-- Add extra classes created to extend Exceptions
+            <entry key="jaxb.additionalContextClasses">
+                <bean class="org.apache.cxf.jaxb.JAXBDataBinding">
+                    <property name="extraClass">
+                        <list>
+                            <value>com.redhat.fuse.example.NotAuthorizedUserException</value>
+                            <value>com.redhat.fuse.example.NoSuchCustomerException</value>
+                        </list>
+                    </property>
+                </bean>
+            </entry>
+             -->
         </cxf:properties>
     </cxf:cxfEndpoint>
 
@@ -49,79 +73,9 @@
           init-method="generateCustomer"/>
 
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
-
-        <route id="cxf-to-client-pojo">
-
-            <from uri="cxf:bean:WS"/>
-
-            <!-- Convert -->
-            <bean ref="enrich" method="convertToAuthenticationWithRealm"/>
-            <log message=">> Exchange header : ${in.header.CamelAuthentication}"/>
-
-            <!-- Check if the client is authorized -->
-            <policy ref="admin">
-                <choice>
-                    <when>
-                        <simple>${in.header.SOAPAction} contains 'getCustomerByName'</simple>
-                        <log message=">>> We will search a Customer"/>
-                        <bean method="getCustomerByName2" ref="enrich"/>
-                        <log message=">>> Response generated : ${body}"/>
-                    </when>
-                    <when>
-                        <simple>${in.header.SOAPAction} contains 'saveCustomer'</simple>
-                        <log message=">>> We will save a Customer"/>
-                        <bean method="saveCustomer" ref="enrich"/>
-                    </when>
-                    <when>
-                        <simple>${in.header.SOAPAction} contains 'getAllCustomers'</simple>
-                        <log message=">>> We will get all Customers"/>
-                        <bean method="getCustomers" ref="enrich"/>
-                    </when>
-                </choice>
-            </policy>
-        </route>
-
-        <!--
-
-        <dataFormats>
-            <soapjaxb contextPath="com.redhat.fuse.example" id="soapFormat"/>
-        </dataFormats>
-
-        <route id="cxf-to-client-message">
-
-            <from uri="cxf:bean:WS"/>
-
-            <from uri="cxf:bean:WS?dataFormat=CXF_MESSAGE"/>
-            <unmarshal ref="soapFormat"/>
-
-            <policy ref="admin">
-                <choice>
-                    <when>
-                        <simple>${in.header.SOAPAction} contains 'getCustomerByName'</simple>
-                        <log message=">>> We will search a Customer"/>
-                        <bean method="getCustomerByName" ref="enrich"/>
-                        <marshal ref="soapFormat"/>
-                    </when>
-                    <when>
-                        <simple>${in.header.SOAPAction} contains 'saveCustomer'</simple>
-                        <log message=">>> We will save a Customer"/>
-                        <bean method="saveCustomer" ref="enrich"/>
-                        <marshal ref="soapFormat"/>
-                    </when>
-                    <when>
-                        <simple>${in.header.SOAPAction} contains 'getAllCustomers'</simple>
-                        <log message=">>> We will get all Customers"/>
-                        <bean method="getCustomers" ref="enrich"/>
-                        <marshal ref="soapFormat"/>
-                    </when>
-                </choice>
-            </policy>
-
-            <log message=">>> Response generated : ${body}"/>
-
-        </route>
-        -->
-
+        <packageScan>
+            <package>com.redhat.fuse.example.camel</package>
+        </packageScan>
     </camelContext>
 
 </beans>
