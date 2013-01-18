@@ -46,7 +46,7 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
         java.net.URL resource = this.getClass().getClassLoader().getResource(path);
         if (resource != null) {
             path = resource.getFile();
-            System.setProperty("java.security.auth.login.config", path);
+             System.setProperty("java.security.auth.login.config", path);
         }
     }
 
