@@ -25,8 +25,8 @@ standard allows not only to authenticate a user but also to sign/encrypt SOAP me
 The project contains 2 unit tests which can be used to test locally ws-security with camel using JAAS and [CalBackhandler](http://docs.oracle.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html)
 or JAAS & [Security Module - LoginModule](http://docs.oracle.com/javase/6/docs/api/javax/security/auth/spi/LoginModule.html)
 
-  mvn test -Dtest=WebServiceAuthenticateCustomerTest
-  mvn test -Dtest=WebServiceAuthenticateCustomerUsingRealmTest
+    mvn test -Dtest=WebServiceAuthenticateCustomerTest
+    mvn test -Dtest=WebServiceAuthenticateCustomerUsingRealmTest
 
 
 Instructions to run the JAAS or JAAS-Realm example
