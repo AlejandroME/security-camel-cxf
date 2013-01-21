@@ -23,32 +23,19 @@
             <ref bean="wss4jInInterceptor"/>
             <ref bean="authenticationInterceptor"/>
         </cxf:inInterceptors>
-        <!--
-        <cxf:dataBinding>
-            <bean class="org.apache.cxf.jaxb.JAXBDataBinding">
-                <property name="extraClass">
-                    <list>
-                        <value>com.redhat.fuse.example.NotAuthorizedUserException</value>
-                        <value>com.redhat.fuse.example.NoSuchCustomerException</value>
-                    </list>
-                </property>
-            </bean>
-        </cxf:dataBinding>
-        -->
         <cxf:properties>
             <entry key="ws-security.validate.token" value="false"/>
-            <!-- Add extra classes created to extend Exceptions
+            <!-- Add extra classes created and extending Exceptions -->
             <entry key="jaxb.additionalContextClasses">
-                <bean class="org.apache.cxf.jaxb.JAXBDataBinding">
-                    <property name="extraClass">
+                <bean class="com.redhat.fuse.example.util.ClassArrayFactoryBean">
+                    <property name="classNames">
                         <list>
-                            <value>com.redhat.fuse.example.NotAuthorizedUserException</value>
-                            <value>com.redhat.fuse.example.NoSuchCustomerException</value>
+                            <value>com.redhat.fuse.example.NotAuthorizedUserFault</value>
+                            <value>com.redhat.fuse.example.NoSuchCustomerFault</value>
                         </list>
                     </property>
                 </bean>
             </entry>
-             -->
         </cxf:properties>
     </cxf:cxfEndpoint>
 

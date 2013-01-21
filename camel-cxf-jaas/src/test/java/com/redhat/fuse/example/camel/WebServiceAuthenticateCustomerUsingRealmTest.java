@@ -129,17 +129,23 @@ public class WebServiceAuthenticateCustomerUsingRealmTest extends CamelSpringTes
         String url = context.resolvePropertyPlaceholders(URL);
         CustomerService customerService = createCXFClient(url,user);
 
+        // ADd additional classes
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put("jaxb.additionalContextClasses",
+                new Class[] {NoSuchCustomerFault.class, NotAuthorizedUserFault.class});
+        factory.setProperties(props);
+
         Throwable t = null;
         try {
             GetCustomerByNameResponse result = customerService.getCustomerByName(req);
             fail("expect NotAuthorizedUserException");
-        } catch (NotAuthorizedUserException e) {
+        } catch (NotAuthorizedUserFault e) {
             t = e;
             assertEquals("Not Authorized user : ", "jim", e.getFaultInfo().getUser());
         }
 
         assertNotNull(t);
-        assertTrue(t instanceof NotAuthorizedUserException);
+        assertTrue(t instanceof NotAuthorizedUserFault);
 
         // SetDefaultBus to null to avoid issue
         // when within same JVM we run different CXF
