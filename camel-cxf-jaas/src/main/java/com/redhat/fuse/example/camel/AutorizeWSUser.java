@@ -2,9 +2,7 @@ package com.redhat.fuse.example.camel;
 
 import com.redhat.fuse.example.NotAuthorizedUser;
 import com.redhat.fuse.example.NotAuthorizedUserFault;
-import org.apache.camel.CamelAuthorizationException;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 
 public class AutorizeWSUser extends RouteBuilder {
@@ -19,9 +17,11 @@ public class AutorizeWSUser extends RouteBuilder {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         String user = "jim";
-                        NotAuthorizedUserFault notAuthorizedUserFault = new NotAuthorizedUserFault();
                         NotAuthorizedUser notAuthorizedUser = new NotAuthorizedUser();
                         notAuthorizedUser.setUser(user);
+                        NotAuthorizedUserFault notAuthorizedUserFault = new NotAuthorizedUserFault("User Not authorized to call this camel route !", notAuthorizedUser);
+
+                        exchange.getOut().setFault(true);
                         exchange.getOut().setBody(notAuthorizedUserFault);
                     }
                 });
@@ -44,6 +44,7 @@ public class AutorizeWSUser extends RouteBuilder {
                     .log(">>> We will get all Customers")
                     .beanRef("enrich", "getCustomers")
             ;
+
 
     }
 }
